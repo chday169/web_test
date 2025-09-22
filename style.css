@@ -1,0 +1,151 @@
+const articles = [
+  {
+    title: "書籍介紹",
+    code: "book1",
+    pdf: "assets/docs/書籍介紹.pdf",
+    imageFolder: "assets/images/book1"
+  },
+  {
+    title: "網頁架構設計",
+    code: "book2",
+    pdf: "assets/docs/網頁架構設計.pdf",
+    imageFolder: "assets/images/book2"
+  }
+];
+
+let currentIndex = -1;
+let currentPage = 1;
+let currentMode = "pdf";
+let currentPages = 0;
+
+window.onload = function () {
+  populateSelector();
+};
+
+function populateSelector() {
+  const selector = document.getElementById("article-selector");
+  selector.innerHTML = '<option value="">請選擇...</option>';
+
+  articles.forEach(article => {
+    const option = document.createElement("option");
+    option.value = article.title;
+    option.textContent = currentMode === "pdf" ? article.title : article.code;
+    selector.appendChild(option);
+  });
+}
+
+function loadSelectedArticle() {
+  const selector = document.getElementById("article-selector");
+  const selectedTitle = selector.value;
+  const article = articles.find(a => a.title === selectedTitle);
+
+  if (article) {
+    currentIndex = articles.indexOf(article);
+    currentPage = 1;
+    document.getElementById("article-title").textContent =
+      currentMode === "pdf" ? article.title : article.code;
+
+    if (currentMode === "image") {
+      detectPages(article.imageFolder, function (pages) {
+        currentPages = pages;
+        updateView();
+      });
+    } else {
+      updateView();
+    }
+  }
+}
+
+function detectPages(folder, callback) {
+  let page = 1;
+  let maxTry = 100;
+  let testImage = new Image();
+
+  function tryNext() {
+    if (page > maxTry) {
+      callback(page - 1);
+      return;
+    }
+
+    testImage.src = `${folder}/page${page}.jpg`;
+    testImage.onload = () => {
+      page++;
+      tryNext();
+    };
+    testImage.onerror = () => {
+      callback(page - 1);
+    };
+  }
+
+  tryNext();
+}
+
+function updateView() {
+  const article = articles[currentIndex];
+  const viewer = document.getElementById("pdf-viewer");
+  const img = document.getElementById("article-image");
+  const pageNav = document.getElementById("page-nav");
+  const pageInfo = document.getElementById("page-info");
+
+  if (currentMode === "pdf") {
+    viewer.src = article.pdf;
+    viewer.style.display = "block";
+    img.style.display = "none";
+    pageNav.style.display = "none";
+    pageInfo.style.display = "none";
+  } else if (currentMode === "image") {
+    img.src = `${article.imageFolder}/page${currentPage}.jpg`;
+    img.style.display = "block";
+    viewer.style.display = "none";
+    pageNav.style.display = "block";
+    pageInfo.style.display = "block";
+    pageInfo.textContent = `第 ${currentPage} 頁 / 共 ${currentPages} 頁`;
+  }
+}
+
+function switchMode() {
+  const selected = document.querySelector('input[name="mode"]:checked').value;
+  currentMode = selected;
+  populateSelector();
+  document.getElementById("article-title").textContent = "尚未選擇內容";
+  document.getElementById("pdf-viewer").style.display = "none";
+  document.getElementById("article-image").style.display = "none";
+  document.getElementById("page-nav").style.display = "none";
+  document.getElementById("page-info").style.display = "none";
+}
+
+function prevArticle() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    currentPage = 1;
+    loadArticleByIndex();
+  }
+}
+
+function nextArticle() {
+  if (currentIndex < articles.length - 1) {
+    currentIndex++;
+    currentPage = 1;
+    loadArticleByIndex();
+  }
+}
+
+function loadArticleByIndex() {
+  const article = articles[currentIndex];
+  document.getElementById("article-selector").value = article.title;
+  loadSelectedArticle();
+}
+
+function prevPage() {
+  if (currentMode === "image" && currentPage > 1) {
+    currentPage--;
+    updateView();
+  }
+}
+
+function nextPage() {
+  if (currentMode === "image" && currentPage < currentPages) {
+    currentPage++;
+    updateView();
+  }
+}
