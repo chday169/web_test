@@ -1,7 +1,7 @@
 # 📚 AI老師的文章展示平台
 
-![GitHub repo size](https://img.shields.io/github/repo-size/你的帳號/ai-teacher-platform)
-![GitHub last commit](https://img.shields.io/github/last-commit/你的帳號/ai-teacher-platform)
+![GitHub repo size](https://img.shields.io/github/repo-size/chday169/ai-teacher-platform)
+![GitHub last commit](https://img.shields.io/github/last-commit/chday169/ai-teacher-platform)
 ![GitHub Pages](https://img.shields.io/badge/Live-Demo-blue?logo=github)
 
 > 一個支援 PDF 與圖片閱讀的教學展示平台，適合教師、講者、內容創作者分享教材與筆記。
@@ -26,4 +26,6 @@
 
 ## 📁 資料夾結構
 
+
+---
 
