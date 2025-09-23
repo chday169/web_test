@@ -10,7 +10,13 @@ const articles = [
     code: "book2",
     pdf: "assets/docs/網頁架構設計.pdf",
     imageFolder: "assets/images/book2"
-  }
+  },
+  {
+    title: "纽西蘭基督城海格利公園及愛芬河一日遊",
+    code: "book2",
+    pdf: "assets/docs/纽西蘭基督城海格利公園及愛芬河一日遊.pdf",
+    imageFolder: "assets/images/book2"
+  }  
 ];
 
 let currentIndex = -1;
